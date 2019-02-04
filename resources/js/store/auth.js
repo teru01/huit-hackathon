@@ -1,10 +1,11 @@
-import Axios from "axios";
+import Axios from "axios"
 import { OK, UNPROCESSABLE_ENTITY} from '../util'
 
 const state = {
   user: null,
   apiStatus: null,
-  loginErrorMessages: null
+  loginErrorMessages: null,
+  registerErrorMessages: null
 }
 
 const getters = {
@@ -23,6 +24,10 @@ const mutations = {
 
   setLoginErrorMessages (state, messages) {
     state.loginErrorMessages = messages
+  },
+
+  setRegisterErrorMessages (state, messages) {
+    state.registerErrorMessages = messages
   }
 }
 
