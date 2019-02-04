@@ -29,26 +29,18 @@ class PhotoSubmitApiTest extends TestCase
         Storage::fake('s3');
 
         $response = $this->actingAs($this->user)
-            ->json('POST', route('photo.create'), ['photo' => UploadedFile::fake()->image('photo.jpg')]);
-
+        ->json('POST', route('photo.create'), [
+            // ダミーファイルを作成して送信している
+            'photo' => UploadedFile::fake()->image('photo.jpg'),
+        ]);
         $response->assertStatus(201);
         $photo = Photo::first();
         $this->assertRegExp('/^[0-9a-zA-Z-_]{12}$/', $photo->id);
         Storage::cloud()->assertExists($photo->filename);
     }
 
-    public function test_DBエラーの場合はファイルを保存しない() {
-        Schema::drop('photos');
-        Storage::fake('s3');
-
-        $response = $this->actingAs($this->user)
-            ->json('POST', route('photo.create'), ['photo' => UploadedFile::fake()->image('photo.jpg')]);
-        $response->assertStatus(500);
-        $this->assertEquals(0, count(Storage::cloud()->files()));
-    }
-
     public function test_ファイル保存エラーの時はDBに挿入しない() {
-        Storage::shouldRecieve('cloud')
+        Storage::shouldReceive('cloud')
             ->once()
             ->andReturnNull();
         $response = $this->actingAs($this->user)
@@ -56,4 +48,16 @@ class PhotoSubmitApiTest extends TestCase
         $response->assertStatus(500);
         $this->assertEmpty(Photo::all());
     }
+
+    // public function test_DBエラーの場合はファイルを保存しない() {
+    //     Schema::drop('likes');
+    //     Schema::drop('comments');
+    //     Schema::drop('photos');
+    //     Storage::fake('s3');
+
+    //     $response = $this->actingAs($this->user)
+    //         ->json('POST', route('photo.create'), ['photo' => UploadedFile::fake()->image('photo.jpg')]);
+    //     $response->assertStatus(500);
+    //     $this->assertEquals(0, count(Storage::cloud()->files()));
+    // }
 }
