@@ -27,4 +27,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * photosテーブルとのリレーションをモデルで定義する。
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function photos() {
+        return $this->hasMany('App\Photo');
+    }
 }
