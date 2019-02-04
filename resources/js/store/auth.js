@@ -1,9 +1,10 @@
 import Axios from "axios";
-import {OK} from '../util'
+import { OK, UNPROCESSABLE_ENTITY} from '../util'
 
 const state = {
   user: null,
-  apiStatus: null
+  apiStatus: null,
+  loginErrorMessages: null
 }
 
 const getters = {
@@ -18,6 +19,10 @@ const mutations = {
 
   setApiStatus (state, apiStatus) {
     state.apiStatus = apiStatus
+  },
+
+  setLoginErrorMessages (state, messages) {
+    state.loginErrorMessages = messages
   }
 }
 
@@ -38,7 +43,11 @@ const actions = {
     }
 
     context.commit('setApiStatus', false)
-    context.commit('error/setCode', response.status, {root: true})
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit('setLoginErrorMessages', response.data.errors)
+    } else {
+      context.commit('error/setCode', response.status, {root: true})
+    }
   },
 
   async logout (context) {
