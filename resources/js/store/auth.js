@@ -29,30 +29,35 @@ const mutations = {
   setRegisterErrorMessages (state, messages) {
     state.registerErrorMessages = messages
   }
+};
+
+
+const postUserData = async (context, data, operation) => {
+  context.commit('setApiStatus', null)
+  const response = await Axios.post(`/api/${operation}`, data)
+
+  if (response.status === OK) {
+    context.commit('setApiStatus', true)
+    context.commit('setUser', response.data)
+    return false
+  }
+
+  context.commit('setApiStatus', false)
+  if (response.status === UNPROCESSABLE_ENTITY) {
+    const operationUpperCase = operation.charAt(0).toUpperCase() + operation.slice(1)
+    context.commit(`set${operationUpperCase}ErrorMessages`, response.data.errors)
+  } else {
+    context.commit('error/setCode', response.status, {root: true})
+  }
 }
 
 const actions = {
   async register (context, data) {
-    const response = await Axios.post('/api/register', data)
-    context.commit('setUser', response.data)
+    return postUserData(context, data, 'register')
   },
 
   async login (context, data) {
-    context.commit('setApiStatus', null)
-    const response = await Axios.post('/api/login', data).catch(err => err.response || err)
-
-    if (response.status === OK) {
-      context.commit('setApiStatus', true)
-      context.commit('setUser', response.data)
-      return false
-    }
-
-    context.commit('setApiStatus', false)
-    if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit('setLoginErrorMessages', response.data.errors)
-    } else {
-      context.commit('error/setCode', response.status, {root: true})
-    }
+    return postUserData(context, data, 'login')
   },
 
   async logout (context) {
