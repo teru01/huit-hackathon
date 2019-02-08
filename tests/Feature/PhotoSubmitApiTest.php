@@ -49,15 +49,15 @@ class PhotoSubmitApiTest extends TestCase
         $this->assertEmpty(Photo::all());
     }
 
-    // public function test_DBエラーの場合はファイルを保存しない() {
-    //     Schema::drop('likes');
-    //     Schema::drop('comments');
-    //     Schema::drop('photos');
-    //     Storage::fake('s3');
+    public function test_DBエラーの場合はファイルを保存しない() {
+        Schema::drop('likes');
+        Schema::drop('comments');
+        Schema::drop('photos');
+        Storage::fake('s3');
 
-    //     $response = $this->actingAs($this->user)
-    //         ->json('POST', route('photo.create'), ['photo' => UploadedFile::fake()->image('photo.jpg')]);
-    //     $response->assertStatus(500);
-    //     $this->assertEquals(0, count(Storage::cloud()->files()));
-    // }
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('photo.create'), ['photo' => UploadedFile::fake()->image('photo.jpg')]);
+        $response->assertStatus(500);
+        $this->assertEquals(0, count(Storage::cloud()->files()));
+    }
 }
