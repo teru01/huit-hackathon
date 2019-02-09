@@ -14,7 +14,7 @@ class PhotoListApiTest extends TestCase
     use RefreshDatabase;
 
     public function test_正しいJSONを返却() {
-        factory(Photo::class, 5)->create();
+        factory(Photo::class, 3)->create();
 
         $response = $this->getJson(route('photo.index'));
         $photos = Photo::with(['owner'])->orderBy('created_at', 'desc')->get();
@@ -30,7 +30,7 @@ class PhotoListApiTest extends TestCase
         })->all();
 
         $response->assertStatus(200)
-            ->assertJsonCount(5, 'data')
+            ->assertJsonCount(3, 'data')
             ->assertJsonFragment([
                 'data' => $expected_data
             ]);
