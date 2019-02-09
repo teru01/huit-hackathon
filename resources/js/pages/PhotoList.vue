@@ -8,7 +8,7 @@
         :item="photo"
       />
     </div>
-    <Pagination :current-page="currentPage" :total="total" />
+    <Pagination :current-page="currentPage" :last-page="lastPage" />
   </div>
 </template>
 
@@ -28,19 +28,27 @@ export default {
     return {
       photos: [],
       currentPage: 0,
-      total: 0
+      lastPage: 0
+    }
+  },
+
+  props: {
+    page: {
+      type: Number,
+      required: false,
+      default: 1
     }
   },
 
   methods: {
     async fetchPhotos () {
-      const response = await Axios.get('/api/photos')
+      const response = await Axios.get(`/api/photos?page=${this.page}`)
       if (response.status !== OK) {
         this.$store.commit('error/setCode', response.status)
         return false
       }
       this.currentPage = response.data.current_page
-      this.total = response.data.total
+      this.lastPage = response.data.last_page
       this.photos = response.data.data
     }
   },

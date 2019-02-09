@@ -9,6 +9,7 @@ class Photo extends Model
 {
     protected $keyType = 'string';
     const ID_LENGTH = 12;
+    protected $perPage = 3;
 
     // 自作フィールドはここに入れないとJSONに含まれない
     protected $appends = [
