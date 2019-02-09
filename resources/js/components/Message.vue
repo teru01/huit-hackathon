@@ -11,6 +11,9 @@ export default {
     ...mapState({
       message: state => state.message.content
     })
+    // ...mapState('message', {
+    //   message: ['content'] }
+    // )
   }
 }
 </script>
