@@ -5,6 +5,7 @@
     </header>
     <main>
       <div class="container">
+        <Message />
         <RouterView/>
       </div>
     </main>
@@ -15,12 +16,15 @@
 <script>
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
+import Message from './components/Message'
+
 import { INTERNAL_SERVER_ERROR } from './util'
 
 export default {
   components: {
     Navbar,
-    Footer
+    Footer,
+    Message
   },
 
   computed: {
