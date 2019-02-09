@@ -8,22 +8,27 @@
         :item="photo"
       />
     </div>
+    <Pagination :current-page="currentPage" :total="total" />
   </div>
 </template>
 
 <script>
 import { OK } from '../util'
 import Photo from '../components/Photo'
+import Pagination from '../components/Pagination'
 import Axios from 'axios';
 
 export default {
   components: {
-    Photo
+    Photo,
+    Pagination
   },
 
   data () {
     return {
-      photos: []
+      photos: [],
+      currentPage: 0,
+      total: 0
     }
   },
 
@@ -34,7 +39,8 @@ export default {
         this.$store.commit('error/setCode', response.status)
         return false
       }
-
+      this.currentPage = response.data.current_page
+      this.total = response.data.total
       this.photos = response.data.data
     }
   },
