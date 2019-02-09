@@ -12,8 +12,10 @@ class PhotoDetailApiTest extends TestCase
     use RefreshDatabase;
 
     public function test_正しいJSONを返す() {
-        factory(Photo::class)->create();
-        $photo = Photo::with(['owner'])->first();
+        factory(Photo::class)->create()->each(function ($photo) {
+            $photo->comments()->saveMany(factory(Comment::class, 3)->make());
+        });
+        $photo = Photo::first();
 
         $expected_data = [
             'id' => $photo->id,
@@ -21,6 +23,14 @@ class PhotoDetailApiTest extends TestCase
             'owner' => [
                 'name' => $photo->owner->name
             ],
+            'comments' => $photo->comments->sortByDesc('id')->map(function ($comment) {
+                return [
+                    'author' => [
+                        'name' => $comment->name
+                    ],
+                    'content' => $comment->content
+                ];
+            })
         ];
 
         $response = $this->getJson(route('photo.show', ['id' => $photo->id]));
