@@ -27,11 +27,11 @@ class PhotoDetailApiTest extends TestCase
             'comments' => $photo->comments->sortByDesc('id')->map(function ($comment) {
                 return [
                     'author' => [
-                        'name' => $comment->name
+                        'name' => $comment->author->name,
                     ],
                     'content' => $comment->content
                 ];
-            })
+            })->all()
         ];
 
         $response = $this->getJson(route('photo.show', ['id' => $photo->id]));

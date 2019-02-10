@@ -53,7 +53,7 @@ class PhotoController extends Controller
     }
 
     public function show(String $id) {
-        $photo = Photo::find($id)->with(['owner'])->first();
+        $photo = Photo::find($id)->with(['owner', 'comments.author'])->first();
         return $photo ?? abort(404);
     }
 
