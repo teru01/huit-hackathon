@@ -7,6 +7,7 @@ use App\Http\Requests\StorePhoto;
 use App\Photo;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Comment;
 use App\Http\Requests\StoreComment;
@@ -26,8 +27,6 @@ class PhotoController extends Controller
         $photo = new Photo();
         $photo->filename = $photo->id . '.' . $extension;
         Storage::cloud()->putFileAs('', $request->photo, $photo->filename, 'public');
-        // Storage::cloud()->delete($photo->filename);
-        DB::beginTransaction();
         try {
             Auth::user()->photos()->save($photo);
             DB::commit();
@@ -52,8 +51,8 @@ class PhotoController extends Controller
         return response(Storage::cloud()->get($photo->filename), 200, $headers);
     }
 
-    public function show(String $id) {
-        $photo = Photo::find($id)->with(['owner', 'comments.author', 'likes'])->first();
+    public function show(string $id) {
+        $photo = Photo::where('id', $id)->with(['owner', 'comments.author', 'likes'])->first();
         return $photo ?? abort(404);
     }
 
@@ -69,7 +68,7 @@ class PhotoController extends Controller
     }
 
     private function findPhotoWithLikes(string $id) {
-        $photo = Photo::find($id)->with('likes')->first();
+        $photo = Photo::where('id', $id)->with('likes')->first();
 
         if (!$photo) {
             abort(404);

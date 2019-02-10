@@ -27,5 +27,10 @@ Route::get('/photos/{id}', 'PhotoController@show')->name('photo.show');
 
 Route::post('photos/{photo}/comments', 'PhotoController@addComment')->name('photo.comment');
 
-Route::put('phptos/{id}/like', 'PhotoController@like')->name('photo.like');
-Route::delete('phptos/{id}/like', 'PhotoController@unlike')->name('photo.like');
+Route::put('photos/{id}/like', 'PhotoController@like')->name('photo.like');
+Route::delete('photos/{id}/like', 'PhotoController@unlike')->name('photo.like');
+
+Route::get('/refresh-token', function (Illuminate\Http\Request $request) {
+    $request->session()->regenerateToken();
+    return response()->json();
+});

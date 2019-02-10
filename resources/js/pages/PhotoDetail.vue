@@ -5,8 +5,11 @@
       <figcaption>Posted by {{ photo.owner.name }}</figcaption>
     </figure>
     <div class="photo-detail__pane">
-      <button class="button button--like" title="Like photo">
-        <i class="icon ion-md-heart"></i>12
+      <button class="button button--like"
+      :class="{ 'button--liked': photo.liked_by_user }"
+      title="Like photo"
+      @click="onLikeClick">
+        <i class="icon ion-md-heart"></i>{{ photo.likes_count }}
       </button>
       <a
         :href="`/photos/${photo.id}/download`"
@@ -49,7 +52,7 @@
 </template>
 
 <script>
-import { OK, CREATED, UNPROCESSABLE_ENTITY } from '../util'
+import { OK, CREATED, UNPROCESSABLE_ENTITY, isStatusOk } from '../util'
 import Axios from 'axios'
 
 export default {
@@ -78,10 +81,7 @@ export default {
   methods: {
     async fetchPhoto () {
       const response = await Axios.get(`/api/photos/${this.id}`)
-      if (response.status !== OK) {
-        this.$store.commit('error/setCode', response.status)
-        return false
-      }
+      if (!isStatusOk(response)) return false
 
       this.photo = response.data
     },
@@ -107,6 +107,35 @@ export default {
         response.data,
         ...this.photo.comments
       ])
+    },
+
+    onLikeClick () {
+      if (!this.isLogin) {
+        alert('いいねするにはログインしてください')
+        return false
+      }
+
+      if (this.photo.liked_by_user) {
+        this.unlike()
+      } else {
+        this.like()
+      }
+    },
+
+    async like () {
+      const response = await Axios.put(`/api/photos/${this.photo.id}/like`)
+      if (!isStatusOk(response)) return false
+
+      this.$set(this.photo, 'likes_count', this.photo.likes_count + 1)
+      this.$set(this.photo, 'liked_by_user', true)
+    },
+
+    async unlike () {
+      const response = await Axios.delete(`/api/photos/${this.photo.id}/like`)
+      if (!isStatusOk(response)) return false
+
+      this.$set(this.photo, 'likes_count', this.photo.likes_count - 1)
+      this.$set(this.photo, 'liked_by_user', false)
     }
   },
 
