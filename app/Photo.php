@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class Photo extends Model
 {
@@ -13,12 +14,12 @@ class Photo extends Model
 
     // 自作フィールドはここに入れないとJSONに含まれない
     protected $appends = [
-        'url',
+        'url', 'likes_count', 'liked_by_user'
     ];
 
     // ここに入れたフィールドはAPIで返却するJSONに含まれる。
     protected $visible = [
-        'id', 'owner', 'url', 'comments'
+        'id', 'owner', 'url', 'comments', 'likes_count', 'liked_by_user'
     ];
 
     public function __construct(array $attributes = []) {
@@ -54,10 +55,30 @@ class Photo extends Model
         return $this->hasMany('App\Comment')->orderBy('id', 'desc');
     }
 
+    public function likes()
+    {
+        // ManyToManyの関係を表す。Photo1つに所属するいいねと関連づけられる。
+        return $this->belongsToMany('App\User', 'likes')->withTimestamps();
+    }
+
     /**
      * urlという名前で改変したフィールドを取得したい: computedプロパティのようなもの
      */
     public function getUrlAttribute() {
         return Storage::cloud()->url($this->attributes['filename']);
+    }
+
+    public function getLikesCountAttribute() {
+        return $this->likes->count();
+    }
+
+    public function getLikedByUserAttribute() {
+        if (Auth::guest()) {
+            return false;
+        }
+
+        return $this->likes->contains(function ($user) {
+            return $user->id === Auth::user()->id;
+        });
     }
 }

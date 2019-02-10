@@ -18,7 +18,7 @@ class PhotoController extends Controller
     }
 
     public function index() {
-        return Photo::with(['owner'])->orderBy(Photo::CREATED_AT, 'desc')->paginate();
+        return Photo::with(['owner', 'likes'])->orderBy(Photo::CREATED_AT, 'desc')->paginate();
     }
 
     public function create(StorePhoto $request) {
@@ -53,7 +53,7 @@ class PhotoController extends Controller
     }
 
     public function show(String $id) {
-        $photo = Photo::find($id)->with(['owner', 'comments.author'])->first();
+        $photo = Photo::find($id)->with(['owner', 'comments.author', 'likes'])->first();
         return $photo ?? abort(404);
     }
 
@@ -66,5 +66,29 @@ class PhotoController extends Controller
         $new_comment = Comment::where('id', $comment->id)->with(['author'])->first();
 
         return response($new_comment, 201);
+    }
+
+    private function findPhotoWithLikes(string $id) {
+        $photo = Photo::find($id)->with('likes')->first();
+
+        if (!$photo) {
+            abort(404);
+        }
+
+        return $photo;
+    }
+
+    public function like(string $id) {
+        $photo = $this->findPhotoWithLikes($id);
+        $photo->likes()->detach(Auth::user()->id);
+        $photo->likes()->attach(Auth::user()->id);
+
+        return ['photo_id' => $id];
+    }
+
+    public function unlike(string $id) {
+        $photo = $this->findPhotoWithLikes($id);
+        $photo->likes()->detach(Auth::user()->id);
+        return ['photo_id' => $id];
     }
 }
