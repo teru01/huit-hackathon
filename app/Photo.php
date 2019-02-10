@@ -18,7 +18,7 @@ class Photo extends Model
 
     // ここに入れたフィールドはAPIで返却するJSONに含まれる。
     protected $visible = [
-        'id', 'owner', 'url'
+        'id', 'owner', 'url', 'comments'
     ];
 
     public function __construct(array $attributes = []) {
@@ -48,6 +48,10 @@ class Photo extends Model
 
     public function owner() {
         return $this->belongsTo('App\User', 'user_id', 'id', 'users');
+    }
+
+    public function comments() {
+        return $this->hasMany('App\Comment')->orderBy('id', 'desc');
     }
 
     /**
