@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import PhotoList from './pages/PhotoList.vue'
 import Login from './pages/Login.vue'
 import PhotoDetail from './pages/PhotoDetail.vue'
+import ImageUpload from './pages/ImageUpload.vue'
 
 import store from './store'
 import SystemError from './pages/errors/System.vue'
@@ -37,6 +38,10 @@ const routes = [
         next()
       }
     }
+  },
+  {
+    path: '/image',
+    component: ImageUpload
   },
   {
     path: '/500',

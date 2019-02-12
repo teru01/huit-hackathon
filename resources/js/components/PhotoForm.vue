@@ -80,6 +80,8 @@ export default {
 
       const formData = new FormData();
       formData.append("photo", this.photo);
+      console.log(formData);
+
       const response = await Axios.post("/api/photos", formData);
 
       this.loading = false

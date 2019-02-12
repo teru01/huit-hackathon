@@ -34,3 +34,5 @@ Route::get('/refresh-token', function (Illuminate\Http\Request $request) {
     $request->session()->regenerateToken();
     return response()->json();
 });
+
+Route::post('/image/confirm', 'ImageUpController@confirm')->name('image.confirm');
