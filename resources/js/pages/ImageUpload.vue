@@ -5,6 +5,7 @@
         <button>sousinn
         </button>
     </form>
+    <img :src="path">
   </div>
 </template>
 
@@ -19,7 +20,8 @@ export default {
   data () {
     return {
       formData: {},
-      error: {}
+      error: {},
+      path: ''
     }
   },
 
@@ -48,7 +50,7 @@ export default {
         this.error = response.data.errors
         return
       }
-
+      this.path = response.data.path
       this.$store.commit('image/setState', this.formData)
     }
   }
