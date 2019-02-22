@@ -3,21 +3,35 @@
     <div>
       <input type="text" name="name" @change="setData({'name': $event.target.value})">
       <span v-if="error.name">{{ error.name }}</span>
+      <span v-if="name">{{ name }}</span>
     </div>
 
     <div>
       <input type="file" name="myfile" @change="onFileChange"/>
       <span v-if="error.myfile"> {{ error.myfile }}</span>
+      <span v-if="myfile">{{ myfilename }}</span>
     </div>
   </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   props: {
     error: {
       type: Object
     }
+  },
+
+  computed: {
+    myfilename () {
+      return this.myfile.name
+    },
+
+    // imageKeys () {
+    //   return Object.keys(this.$store.state.image)
+    // },
+    ...mapState('image', ['name', 'myfile']),
   },
 
   methods: {

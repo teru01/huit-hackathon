@@ -90,4 +90,26 @@ class PhotoController extends Controller
         $photo->likes()->detach(Auth::user()->id);
         return ['photo_id' => $id];
     }
+
+    private function makeCSV(array $photos) {
+        $fname = 'photos' . date('Ymd') . '.csv';
+        $file = fopen(\storage_path("app/public/${fname}"), 'w');
+        if($file) {
+            foreach ($photos as $line) {
+                fputcsv($file, array_values($line));
+            }
+        }
+        fclose($file);
+        return $fname;
+    }
+
+    public function csvDownload() {
+        $photos = Photo::with(['likes'])->orderBy(Photo::CREATED_AT, 'desc')->get()->toArray();
+        // $photos = [
+        //     ['id' => 1, 'name' => 'teru'],
+        //     ['id' => 3, 'name' => 'teru'],
+        // ];
+        $fname = $this->makeCSV($photos);
+        return \response()->download(\storage_path("app/public/${fname}"))->deleteFileAfterSend(true);
+    }
 }

@@ -10,6 +10,7 @@
       />
     </div>
     <Pagination :current-page="currentPage" :last-page="lastPage" />
+    <a href="/photos/download">csvダウンロード</a>
   </div>
 </template>
 

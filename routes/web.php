@@ -12,6 +12,7 @@
 */
 
 Route::get('/photos/{photo}/download', 'PhotoController@download');
+Route::get('/photos/download', 'PhotoController@csvDownload');
 
 Route::get('/{any?}', function () {
     return view('index');

@@ -52,6 +52,8 @@ export default {
       }
       this.path = response.data.path
       this.$store.commit('image/setState', this.formData)
+
+      // console.log();
     }
   }
 }
