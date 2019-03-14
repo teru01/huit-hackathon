@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Book;
+use App\Request;
 
 class BookTest extends TestCase
 {
@@ -24,10 +25,21 @@ class BookTest extends TestCase
      */
     public function testFindById()
     {
-        factory(Book::class, 5)->create(['user_id' => $this->user->id]);
-        factory(Book::class, 5)->create();
+        $book = factory(Book::class)->create(['user_id' => $this->user->id]);
+        factory(Request::class, 3)->create(['book_id' => $book->id]);
+
+        $book = Book::with('requests')->first();
         $response = $this->json('GET', '/api/books/user/'.$this->user->id);
-        $response->assertStatus(200)->assertJsonCount(5);
+        $response->assertStatus(200)->assertJsonFragment([
+            'title' => $book->title,
+            'requests' => $book->requests->map(function($req) {
+                return [
+                    'accepted' => $req->accepted,
+                    'id' => $req->id,
+                    'user_id' => $req->user_id,
+                ];
+            }),
+        ]);
     }
 
     public function testRegister() {
@@ -40,5 +52,13 @@ class BookTest extends TestCase
 
         $addedbook = Book::first();
         $this->assertEquals($addedbook->title, $book->title);
+    }
+
+    public function testShow() {
+        $book = factory(Book::class)->create();
+        $response = $this->json('GET', '/api/books/'.$book->id);
+        $response->assertStatus(200)->assertJsonFragment([
+            'title' => $book->title
+        ]);
     }
 }

@@ -8,5 +8,7 @@ class Book extends Model
 {
     protected $guarded = ['id'];
 
-    
+    public function requests() {
+        return $this->hasMany('App\Request');
+    }
 }

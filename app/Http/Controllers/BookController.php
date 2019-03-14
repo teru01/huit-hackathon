@@ -42,7 +42,7 @@ class BookController extends Controller
     }
 
     public function usersBook(int $user_id, Request $request) {
-        return Book::where('user_id', $user_id)->get();
+        return Book::where('user_id', $user_id)->with('requests')->get();
     }
 
     /**
