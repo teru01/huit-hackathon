@@ -27,7 +27,7 @@ class User extends Authenticatable
      * photosテーブルとのリレーションをモデルで定義する。
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function photos() {
-        return $this->hasMany('App\Photo');
+    public function books() {
+        return $this->hasMany('App\Book');
     }
 }

@@ -21,18 +21,21 @@ Route::get('/user', function() {
     return Auth::user();
 })->name('user');
 
-Route::post('/photos', 'PhotoController@create')->name('photo.create');
-Route::get('/photos', 'PhotoController@index')->name('photo.index');
-Route::get('/photos/{id}', 'PhotoController@show')->name('photo.show');
+Route::resource('/books', 'BookController');
+Route::get('/books/user/{user_id}', 'BookController@usersBook');
 
-Route::post('photos/{photo}/comments', 'PhotoController@addComment')->name('photo.comment');
+// Route::post('/photos', 'PhotoController@create')->name('photo.create');
+// Route::get('/photos', 'PhotoController@index')->name('photo.index');
+// Route::get('/photos/{id}', 'PhotoController@show')->name('photo.show');
 
-Route::put('photos/{id}/like', 'PhotoController@like')->name('photo.like');
-Route::delete('photos/{id}/like', 'PhotoController@unlike')->name('photo.like');
+// Route::post('photos/{photo}/comments', 'PhotoController@addComment')->name('photo.comment');
 
-Route::get('/refresh-token', function (Illuminate\Http\Request $request) {
-    $request->session()->regenerateToken();
-    return response()->json();
-});
+// Route::put('photos/{id}/like', 'PhotoController@like')->name('photo.like');
+// Route::delete('photos/{id}/like', 'PhotoController@unlike')->name('photo.like');
 
-Route::post('/image/confirm', 'ImageUpController@confirm')->name('image.confirm');
+// Route::get('/refresh-token', function (Illuminate\Http\Request $request) {
+//     $request->session()->regenerateToken();
+//     return response()->json();
+// });
+
+// Route::post('/image/confirm', 'ImageUpController@confirm')->name('image.confirm');
