@@ -26,18 +26,8 @@ Route::get('/books/user/{user_id}', 'BookController@usersBook');
 Route::put('/requests/{book_id}', 'BookController@addRequest');
 
 Route::resource('/requests', 'RequestController');
-// Route::post('/photos', 'PhotoController@create')->name('photo.create');
-// Route::get('/photos', 'PhotoController@index')->name('photo.index');
-// Route::get('/photos/{id}', 'PhotoController@show')->name('photo.show');
-
-// Route::post('photos/{photo}/comments', 'PhotoController@addComment')->name('photo.comment');
-
-// Route::put('photos/{id}/like', 'PhotoController@like')->name('photo.like');
-// Route::delete('photos/{id}/like', 'PhotoController@unlike')->name('photo.like');
 
 // Route::get('/refresh-token', function (Illuminate\Http\Request $request) {
 //     $request->session()->regenerateToken();
 //     return response()->json();
 // });
-
-// Route::post('/image/confirm', 'ImageUpController@confirm')->name('image.confirm');
