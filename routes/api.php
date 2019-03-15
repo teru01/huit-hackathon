@@ -23,7 +23,9 @@ Route::get('/user', function() {
 
 Route::resource('/books', 'BookController');
 Route::get('/books/user/{user_id}', 'BookController@usersBook');
+Route::put('/requests/{book_id}', 'BookController@addRequest');
 
+Route::resource('/requests', 'RequestController');
 // Route::post('/photos', 'PhotoController@create')->name('photo.create');
 // Route::get('/photos', 'PhotoController@index')->name('photo.index');
 // Route::get('/photos/{id}', 'PhotoController@show')->name('photo.show');

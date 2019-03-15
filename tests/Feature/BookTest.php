@@ -7,7 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\User;
 use App\Book;
-use App\Request;
+use App\BRequest;
 
 class BookTest extends TestCase
 {
@@ -26,13 +26,13 @@ class BookTest extends TestCase
     public function testFindById()
     {
         $book = factory(Book::class)->create(['user_id' => $this->user->id]);
-        factory(Request::class, 3)->create(['book_id' => $book->id]);
+        factory(BRequest::class, 3)->create(['book_id' => $book->id]);
 
         $book = Book::with('requests')->first();
         $response = $this->json('GET', '/api/books/user/'.$this->user->id);
         $response->assertStatus(200)->assertJsonFragment([
             'title' => $book->title,
-            'requests' => $book->requests->map(function($req) {
+            'requests' => $book->requests->sortByDesc('id')->map(function($req) {
                 return [
                     'accepted' => $req->accepted,
                     'id' => $req->id,
@@ -59,6 +59,17 @@ class BookTest extends TestCase
         $response = $this->json('GET', '/api/books/'.$book->id);
         $response->assertStatus(200)->assertJsonFragment([
             'title' => $book->title
+        ]);
+    }
+
+    public function test_addRequest() {
+        $book = factory(Book::class)->create();
+        $response = $this->actingAs($this->user)->json('PUT', '/api/requests/'.$book->id);
+        $response->assertStatus(201);
+
+        $book = Book::with('requests')->first();
+        $response->assertJsonFragment([
+            'user_id' => $book->requests->first()->user_id
         ]);
     }
 }

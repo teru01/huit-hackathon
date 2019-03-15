@@ -3,15 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Book;
-use Auth;
-use App\BRequest;
 
-class BookController extends Controller
+class RequestController extends Controller
 {
-    public function __construct() {
-        $this->middleware('auth')->except(['index', 'usersBook', 'show']);
-    }
     /**
      * Display a listing of the resource.
      *
@@ -19,9 +13,18 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::all();
+        //
     }
 
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -31,34 +34,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $book = new Book();
-        $book->user_id = Auth::user()->id;
-        $book->title = $request->title;
-        $book->image_url = $request->image_url;
-        $book->author = $request->author;
-        $book->published = $request->published;
-
-        $book->save();
-        return response($book, 201);
-    }
-
-    public function usersBook(int $user_id, Request $request) {
-        return Book::where('user_id', $user_id)->with('requests')->get();
-    }
-
-    public function addRequest(Request $request, int $book_id) {
-        $oldReq = BRequest::where(['user_id' => Auth::user()->id, 'book_id' => $book_id])->first();
-        if($oldReq) {
-            BRequest::find($oldReq->id)->delete();
-        }
-
-        $borrowReq = new BRequest();
-        $borrowReq->user_id = Auth::user()->id;
-        $borrowReq->book_id = $book_id;
-        $borrowReq->accepted = false;
-        $borrowReq->save();
-
-        return response($borrowReq, 201);
+        //
     }
 
     /**
@@ -69,7 +45,7 @@ class BookController extends Controller
      */
     public function show($id)
     {
-        return Book::find($id);
+        //
     }
 
     /**
@@ -92,7 +68,7 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        
     }
 
     /**

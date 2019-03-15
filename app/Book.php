@@ -9,6 +9,6 @@ class Book extends Model
     protected $guarded = ['id'];
 
     public function requests() {
-        return $this->hasMany('App\Request');
+        return $this->hasMany('App\BRequest')->orderBy('id', 'desc');
     }
 }
