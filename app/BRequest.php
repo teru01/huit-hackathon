@@ -8,5 +8,5 @@ class BRequest extends Model
 {
     protected $guarded = ['id'];
 
-    protected $visible = ['id', 'user_id', 'accepted'];
+    protected $visible = ['id', 'user_id', 'book_id', 'accepted'];
 }

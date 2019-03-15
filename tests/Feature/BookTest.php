@@ -35,10 +35,11 @@ class BookTest extends TestCase
             'requests' => $book->requests->sortByDesc('id')->map(function($req) {
                 return [
                     'accepted' => $req->accepted,
+                    'book_id' => $req->book_id,
                     'id' => $req->id,
                     'user_id' => $req->user_id,
                 ];
-            }),
+            })->all(),
         ]);
     }
 
@@ -58,7 +59,8 @@ class BookTest extends TestCase
         $book = factory(Book::class)->create();
         $response = $this->json('GET', '/api/books/'.$book->id);
         $response->assertStatus(200)->assertJsonFragment([
-            'title' => $book->title
+            'title' => $book->title,
+            'owner' => ['name' => User::find($book->user_id)->name]
         ]);
     }
 
