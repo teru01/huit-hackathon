@@ -72,4 +72,15 @@ class BookTest extends TestCase
             'user_id' => $book->requests->first()->user_id
         ]);
     }
+
+    public function test_accept() {
+        $book = factory(Book::class)->create(['user_id' => $this->user->id]);
+        $request = factory(BRequest::class)->create(['book_id' => $book->id]);
+
+        $response = $this->actingAs($this->user)->json('PATCH', '/api/requests/'.$request->id);
+        $response->assertStatus(200);
+
+        $req = BRequest::find($request->id);
+        $this->assertEquals($req->accepted, true);
+    }
 }

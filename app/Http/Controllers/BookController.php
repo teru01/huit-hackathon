@@ -43,7 +43,9 @@ class BookController extends Controller
     }
 
     public function usersBook(int $user_id, Request $request) {
-        return Book::where('user_id', $user_id)->with('requests')->get();
+        return Book::where('user_id', $user_id)->with(['requests' => function($q) {
+            $q->orderBy('id', 'desc');
+        }])->get();
     }
 
     public function addRequest(Request $request, int $book_id) {

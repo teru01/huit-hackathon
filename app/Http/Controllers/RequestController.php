@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\BRequest;
 
 class RequestController extends Controller
 {
@@ -68,7 +69,13 @@ class RequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $req = BRequest::find($id);
+        if(!$req) {
+            abort(404);
+        }
+        $req->accepted = true;
+        $req->save();
+        return response(null, 200);
     }
 
     /**
