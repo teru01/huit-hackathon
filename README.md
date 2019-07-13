@@ -1,5 +1,7 @@
 # Librarian
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/teru01/huit-hackathon.svg)](https://greenkeeper.io/)
+
 ### 概要
 - 個人の本棚をネット上で可視化・貸し借りできるアプリ
 - 誰もが自分の図書館(Library)を持つことが可能
